@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>延壽寺 GPS 驗證集章</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 2em; }
+        .status { margin-top: 1em; font-size: 1.2em; color: #333; }
+        .button { margin-top: 2em; }
+    </style>
+</head>
+<body>
+    <h2>📍 延壽寺 集章驗證</h2>
+    <p>請允許定位，以確認你是否在寺廟附近（20 公尺內）</p>
+    <div class="status" id="status">正在定位中...</div>
+    <div class="button" id="form-link" style="display:none;">
+        ✅ 驗證成功！<br><br>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing" target="_blank">
+            <button style="font-size:1em;padding:10px 20px;">前往填寫集章表單</button>
+        </a>
+    </div>
+    <script>
+        const targetLat = 25.0428;
+        const targetLng = 121.50632;
+        const maxDistance = 20; // 公尺
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // 地球半徑（公尺）
+            const toRad = x => x * Math.PI / 180;
+            const φ1 = toRad(lat1), φ2 = toRad(lat2);
+            const Δφ = toRad(lat2 - lat1);
+            const Δλ = toRad(lon2 - lon1);
+            const a = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const distance = getDistance(lat, lng, targetLat, targetLng);
+            if (distance <= maxDistance) {
+                document.getElementById("status").innerText = "✅ 驗證成功！你與寺廟距離約 " + Math.round(distance) + " 公尺";
+                document.getElementById("form-link").style.display = 'block';
+            } else {
+                document.getElementById("status").innerText = "❌ 驗證失敗：你與寺廟距離約 " + Math.round(distance) + " 公尺，尚未到達目標位置。";
+            }
+        }, error => {
+            document.getElementById("status").innerText = "⚠️ 無法取得 GPS 位置，請確認已允許定位權限。";
+        });
+    </script>
+</body>
+</html>
