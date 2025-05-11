@@ -1,109 +1,92 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS 驗證集章</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="zh-TW"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;GPS 驗證集章&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: Arial, sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.message {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.success {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: green;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.error {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: red;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1&gt;GPS 驗證集章&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p&gt;請確認您的位置以便集章。&lt;/p&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="message" class="message"&gt;&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 寺廟座標 (經緯度)</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const templeLat = 25.04146;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const templeLon = 121.56279;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 驗證範圍 (單位: 公尺) 設為 50 公尺</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const validationDistance = 50;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 計算兩個坐標的距離 (單位: 公尺)</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function getDistance(lat1, lon1, lat2, lon2) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const R = 6371e3; // 地球半徑 (單位: 公尺)</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const φ1 = lat1 * Math.PI / 180;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const φ2 = lat2 * Math.PI / 180;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const Δφ = (lat2 - lat1) * Math.PI / 180;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const Δλ = (lon2 - lon1) * Math.PI / 180;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                      </span>Math.cos(φ1) * Math.cos(φ2) *</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                      </span>Math.sin(Δλ / 2) * Math.sin(Δλ / 2);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return R * c; // 返回距離 (單位: 公尺)</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 獲取使用者的當前位置</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function getUserLocation() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (navigator.geolocation) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>navigator.geolocation.getCurrentPosition(function(position) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const userLat = position.coords.latitude;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const userLon = position.coords.longitude;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>const distance = getDistance(userLat, userLon, templeLat, templeLon);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>// 顯示結果</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>if (distance &lt;= validationDistance) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>document.getElementById("message").innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="success"&gt;您已經靠近指定位置！&lt;/span&gt;&lt;br&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;a href="https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing" target="_blank"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>點擊這裡進入 Google 表單集章</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>} else {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>document.getElementById("message").innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="error"&gt;請接近指定位置再試一次。&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}, function() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>document.getElementById("message").innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="error"&gt;無法獲取您的位置，請檢查您的定位設置。&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById("message").innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span class="error"&gt;您的瀏覽器不支持定位功能。&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// 當頁面加載完成時，執行位置檢查</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>window.onload = function() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>getUserLocation();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+    <h1>GPS 驗證集章</h1>
+    <p>請確認您的位置以便集章。</p>
+    
+    <div id="message" class="message"></div>
+
+    <script>
+        // 寺廟座標 (經緯度)
+        const templeLat = 25.04146;
+        const templeLon = 121.56279;
+        // 驗證範圍 (單位: 公尺) 設為 50 公尺
+        const validationDistance = 50;
+
+        // 計算兩個坐標的距離 (單位: 公尺)
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // 地球半徑 (單位: 公尺)
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // 返回距離 (單位: 公尺)
+        }
+
+        // 獲取使用者的當前位置
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLon = position.coords.longitude;
+                    const distance = getDistance(userLat, userLon, templeLat, templeLon);
+
+                    // 顯示結果
+                    if (distance <= validationDistance) {
+                        document.getElementById("message").innerHTML = `
+                            <span class="success">您已經靠近指定位置！</span><br>
+                            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing" target="_blank">
+                                點擊這裡進入 Google 表單集章
+                            </a>
+                        `;
+                    } else {
+                        document.getElementById("message").innerHTML = `
+                            <span class="error">請接近指定位置再試一次。</span>
+                        `;
+                    }
+                }, function() {
+                    document.getElementById("message").innerHTML = `
+                        <span class="error">無法獲取您的位置，請檢查您的定位設置。</span>
+                    `;
+                });
+            } else {
+                document.getElementById("message").innerHTML = `
+                    <span class="error">您的瀏覽器不支持定位功能。</span>
+                `;
+            }
+        }
+
+        // 當頁面加載完成時，執行位置檢查
+        window.onload = function() {
+            getUserLocation();
+        };
+    </script>
 </body>
 </html>
