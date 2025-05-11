@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>延壽寺 GPS 驗證集章</title>
+  <title>第 2 番寺廟 GPS 驗證集章</title>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2em; }
     .result { margin-top: 2em; font-size: 1.2em; }
@@ -11,13 +11,13 @@
   </style>
 </head>
 <body>
-  <h1>延壽寺 GPS 驗證</h1>
+  <h1>第 2 番寺廟 GPS 驗證</h1>
   <p>請開啟定位功能，並靠近指定地點（20 公尺內）</p>
   <div class="result" id="result">檢查中...</div>
 
   <script>
-    const targetLat = 25.04146;
-    const targetLng = 121.56279;
+    const targetLat = 25.01266;
+    const targetLng = 121.53507;
     const maxDistance = 20;
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing";
 
@@ -40,12 +40,12 @@
       
       if (distance <= maxDistance) {
         document.getElementById("result").innerHTML = `
-          ✅ 驗證成功！您已到達延壽寺。<br>
+          ✅ 驗證成功！您已到達第 2 番寺廟。<br>
           <a href="${formUrl}" target="_blank">
             <button>前往集章表單</button>
           </a>`;
       } else {
-        document.getElementById("result").innerHTML = `❌ 距離太遠（約 ${Math.round(distance)} 公尺），請靠近延壽寺再試一次。`;
+        document.getElementById("result").innerHTML = `❌ 距離太遠（約 ${Math.round(distance)} 公尺），請靠近第 2 番寺廟再試一次。`;
       }
     }, error => {
       document.getElementById("result").textContent = "無法取得 GPS 位置，請確認定位權限已開啟。";
