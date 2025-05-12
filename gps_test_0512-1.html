@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GPS 集章驗證</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    #status {
+      font-size: 1.2em;
+      margin-top: 1em;
+    }
+    #formButton {
+      display: none;
+      margin-top: 2em;
+    }
+    .button {
+      display: inline-block;
+      padding: 1.5em 2.5em;
+      background-color: #28a745;
+      color: white;
+      font-size: 1.3em;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h2>📍 集章驗證</h2>
+  <p>靠近指定位置 500 公尺內即可進行集章</p>
+  <div id="status">📡 等待定位中...</div>
+  <div id="formButton">
+    <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing" target="_blank">
+      ✅ 點我進入 Google 表單集章
+    </a>
+  </div>
+
+  <script>
+    const targetLat = 25.03702;
+    const targetLng = 121.56918;
+    const validationDistance = 500; // 公尺
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371000; // 地球半徑 (m)
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) *
+          Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function checkLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById("status").innerText = "❌ 瀏覽器不支援 GPS 定位。";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+          const distance = getDistance(userLat, userLng, targetLat, targetLng);
+
+          if (distance <= validationDistance) {
+            document.getElementById("status").innerText =
+              `✅ 驗證通過！您距離目標約 ${Math.round(distance)} 公尺`;
+            document.getElementById("formButton").style.display = "block";
+          } else {
+            document.getElementById("status").innerText =
+              `📍 請靠近指定地點再試一次（目前距離：約 ${Math.round(distance)} 公尺）`;
+          }
+        },
+        function (error) {
+          document.getElementById("status").innerText =
+            "❌ 無法取得 GPS 位置，請開啟定位權限。";
+        }
+      );
+    }
+
+    // 每 3 秒檢查一次
+    setInterval(checkLocation, 3000);
+  </script>
+</body>
+</html>
