@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS 集章驗證</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    #status {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    #stamp-link {
+      display: none;
+      background-color: #4285F4;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>台北新四國巡禮｜集章驗證</h1>
+  <p id="status">正在取得您的位置…</p>
+
+  <a id="stamp-link" href="https://docs.google.com/forms/d/e/1FAIpQLSe8IkaMwYe3hbW_5YY9ge6CDe_CS9vMfAw8KBkn_SolRZbkLA/viewform?usp=sharing" target="_blank">✅ 您已抵達！點我進行集章表單</a>
+
+  <script>
+    const targetLat = 25.04146;
+    const targetLng = 121.56279;
+    const radius = 100; // 公尺
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371000; // 地球半徑（公尺）
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function success(position) {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      const dist = getDistance(userLat, userLng, targetLat, targetLng);
+
+      const status = document.getElementById('status');
+      const link = document.getElementById('stamp-link');
+
+      if (dist <= radius) {
+        status.textContent = `✅ 您已抵達集章地點（距離 ${Math.round(dist)} 公尺）`;
+        link.style.display = 'inline-block';
+      } else {
+        status.textContent = `❌ 尚未抵達集章地點，您目前距離目標約 ${Math.round(dist)} 公尺`;
+      }
+    }
+
+    function error(err) {
+      document.getElementById('status').textContent = `⚠️ 取得定位失敗：${err.message}`;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      document.getElementById('status').textContent = '⚠️ 您的瀏覽器不支援 GPS 定位功能。';
+    }
+  </script>
+</body>
+</html>
