@@ -36,6 +36,8 @@
 </head>
 <body>
 
+  <audio id="notify-sound" src="audio/level-up.mp3" preload="auto"></audio>
+  
   <h1 id="temple-title">札所</h1>
   <p id="status">正在取得您的位置…</p>
   <p id="distance-info"></p>
@@ -93,6 +95,7 @@
       const distanceDisplay = Math.round(distance);
 
       if (distance <= 300) {
+        document.getElementById("notify-sound").play();
         localStorage.setItem(`stamp-${templeId}`, "true");
         showSuccess();
       } else {
