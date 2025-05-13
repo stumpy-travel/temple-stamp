@@ -3,125 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GPS 集章驗證</title>
+  <title>寺廟集章</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       padding: 2em;
-      max-width: 500px;
-      margin: auto;
     }
-    #status {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
-    #stamp {
-      display: none;
-      margin-top: 20px;
-    }
-    #stamp img {
-      width: 200px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.3);
-    }
-    #reset-btn {
+    img {
       margin-top: 1em;
-      display: none;
-      background: #ccc;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.9em;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    button {
+      margin-top: 2em;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #ddd;
+      cursor: pointer;
+    }
+    #success-message {
+      margin-top: 1.5em;
     }
   </style>
 </head>
 <body>
-  <h1 id="temple-name">集章驗證</h1>
-  <p id="status">正在取得您的位置…</p>
 
-  <div id="stamp">
-    <p>✅ 您已成功集章！</p>
-    <img id="stamp-img" src="" alt="寺廟章圖">
-  </div>
-
-  <button id="reset-btn" onclick="resetStamp()">🗑 取消集章記錄</button>
-
-  <script>
-  const temples = {
-  "001": {
-    name: "延壽寺",
-    lat: 25.04146,
-    lng: 121.56279,
-    radius: 300,
-    stampImage: "https://stumpy-travel.github.io/temple-stamp/stamps/艾倫頭貼.png"
-  }
-};
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const templeId = urlParams.get('temple');
-    const temple = temples[templeId];
-
-    const status = document.getElementById('status');
-    const nameEl = document.getElementById('temple-name');
-    const stampDiv = document.getElementById('stamp');
-    const stampImg = document.getElementById('stamp-img');
-    const resetBtn = document.getElementById('reset-btn');
-
-    if (!temple) {
-      status.textContent = '❌ 無效的寺廟 ID，請檢查網址參數。';
-    } else {
-      nameEl.textContent = `札所 ${templeId}：${temple.name}`;
-
-      if (localStorage.getItem(`stamp_${templeId}`) === 'true') {
-        showStamp();
-      } else {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(success, error);
-        } else {
-          status.textContent = '⚠️ 您的瀏覽器不支援 GPS 定位功能。';
-        }
-      }
-    }
-
-    function getDistance(lat1, lng1, lat2, lng2) {
-      const R = 6371000;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLng = (lng2 - lng1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLng / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    function success(position) {
-      const userLat = position.coords.latitude;
-      const userLng = position.coords.longitude;
-      const dist = getDistance(userLat, userLng, temple.lat, temple.lng);
-
-      if (dist <= temple.radius) {
-        localStorage.setItem(`stamp_${templeId}`, 'true');
-        showStamp();
-        status.textContent = `✅ 您已抵達 ${temple.name}（距離約 ${Math.round(dist)} 公尺）`;
-      } else {
-        status.textContent = `❌ 尚未抵達 ${temple.name}，目前距離約 ${Math.round(dist)} 公尺`;
-      }
-    }
-
-    function error(err) {
-      status.textContent = `⚠️ 取得定位失敗：${err.message}`;
-    }
-
-    function showStamp() {
-      stampImg.src = temple.stampImage;
-      stampDiv.style.display = 'block';
-      resetBtn.style.display = 'inline-block';
-    }
-
-    function resetStamp() {
-      localStorage.removeItem(`stamp_${templeId}`);
-      location.reload();
-    }
-  </script>
-</body>
-</html>
+  <h1 id="
