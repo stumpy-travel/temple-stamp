@@ -21,11 +21,16 @@
       font-size: 1em;
       border: none;
       border-radius: 8px;
-      background-color: #ddd;
-      cursor: pointer;
+      background-color: #ccc;
+      cursor: not-allowed;
     }
     #success-message {
       margin-top: 1.5em;
+    }
+    #distance-info {
+      margin-top: 1em;
+      font-size: 1.1em;
+      color: #555;
     }
   </style>
 </head>
@@ -33,6 +38,7 @@
 
   <h1 id="temple-title">札所</h1>
   <p id="status">正在取得您的位置…</p>
+  <p id="distance-info"></p>
 
   <div id="success-message" style="display: none;">
     <p>✅ 您已成功集章！</p>
@@ -42,7 +48,7 @@
   </div>
 
   <script>
-    // === 自訂資料 ===
+    // 寺廟資料
     const temples = {
       "001": {
         name: "札所 001：延壽寺",
@@ -84,12 +90,14 @@
       const userLat = position.coords.latitude;
       const userLng = position.coords.longitude;
       const distance = getDistance(userLat, userLng, temple.lat, temple.lng);
+      const distanceDisplay = Math.round(distance);
 
       if (distance <= 300) {
         localStorage.setItem(`stamp-${templeId}`, "true");
         showSuccess();
       } else {
-        document.getElementById("status").innerText = `📍 您距離「${temple.name}」約 ${Math.round(distance)} 公尺，尚未進入可集章範圍（300 公尺內）。`;
+        document.getElementById("status").innerText = "❌ 尚未進入可集章範圍";
+        document.getElementById("distance-info").innerText = `📍 您目前距離「${temple.name}」還有 ${distanceDisplay} 公尺。請靠近至 300 公尺內再試一次。`;
       }
     }
 
@@ -99,6 +107,7 @@
 
     function showSuccess() {
       document.getElementById("status").style.display = "none";
+      document.getElementById("distance-info").style.display = "none";
       document.getElementById("success-message").style.display = "block";
       document.getElementById("stamp-image").src = temple.image;
     }
