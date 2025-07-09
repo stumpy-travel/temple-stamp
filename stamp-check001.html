@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>寺廟集章</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    img {
+      margin-top: 1em;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    button {
+      margin-top: 2em;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #success-message {
+      margin-top: 1.5em;
+    }
+    #distance-info {
+      margin-top: 1em;
+      font-size: 1.1em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="notify-sound" src="audio/level-up.mp3" preload="auto"></audio>
+  
+  <h1 id="temple-title">札所</h1>
+  <p id="status">正在取得您的位置…</p>
+  <p id="distance-info"></p>
+
+  <div id="success-message" style="display: none;">
+    <p>✅ 您已成功集章！</p>
+    <img id="stamp-image" src="" alt="寺廟章圖" width="120" />
+    <br />
+    <button onclick="clearStamp()">🗑️ 取消集章記錄</button>
+  </div>
+
+  <script>
+    // 寺廟資料
+    const temples = {
+      "001": {
+        name: "捷運市府站",
+        lat: 25.04123,
+        lng: 121.56655,
+        image: "https://stumpy-travel.github.io/temple-stamp/stamps/Ogilvy.jpg"
+      }
+    };
+
+    const query = new URLSearchParams(window.location.search);
+    const templeId = query.get("temple");
+
+    if (!templeId || !temples[templeId]) {
+      document.getElementById("status").innerText = "❌ 無效的寺廟 ID";
+      document.getElementById("temple-title").innerText = "無法載入寺廟資料";
+      throw new Error("Invalid temple ID");
+    }
+
+    const temple = temples[templeId];
+    document.getElementById("temple-title").innerText = temple.name;
+
+    const saved = localStorage.getItem(`stamp-${templeId}`);
+    if (saved === "true") {
+      showSuccess();
+    } else {
+      getLocation();
+    }
+
+    function getLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById("status").innerText = "❌ 無法取得定位：您的裝置不支援定位功能。";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+
+    function success(position) {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      const distance = getDistance(userLat, userLng, temple.lat, temple.lng);
+      const distanceDisplay = Math.round(distance);
+
+      if (distance <= 300) {
+        document.getElementById("notify-sound").play();
+        localStorage.setItem(`stamp-${templeId}`, "true");
+        showSuccess();
+      } else {
+        document.getElementById("status").innerText = "❌ 尚未進入可集章範圍";
+        document.getElementById("distance-info").innerText = `📍 您目前距離「${temple.name}」還有 ${distanceDisplay} 公尺。請靠近至 300 公尺內再試一次。`;
+      }
+    }
+
+    function error(err) {
+      document.getElementById("status").innerText = "❌ 取得定位失敗：" + err.message;
+    }
+
+    function showSuccess() {
+      document.getElementById("status").style.display = "none";
+      document.getElementById("distance-info").style.display = "none";
+      document.getElementById("success-message").style.display = "block";
+      document.getElementById("stamp-image").src = temple.image;
+    }
+
+    function clearStamp() {
+      localStorage.removeItem(`stamp-${templeId}`);
+      location.reload();
+    }
+
+    function getDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371000; // 地球半徑（公尺）
+      const rad = Math.PI / 180;
+      const dLat = (lat2 - lat1) * rad;
+      const dLng = (lng2 - lng1) * rad;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * rad) * Math.cos(lat2 * rad) *
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+  </script>
+
+</body>
+</html>
 
